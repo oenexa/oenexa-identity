@@ -1,0 +1,18 @@
+﻿groups:
+  - name: oenexa-identity-alerts
+    rules:
+      - alert: ServiceDown
+        expr: up{service=\"oenexa-identity\"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: \"oenexa-identity instance is down\"
+          description: \"Pod for oenexa-identity has been down for more than 1 minute.\"
+      - alert: High5xxRate
+        expr: rate(http_requests_total{service=\"oenexa-identity\",status=~\"5..\"}[5m]) > 0.05
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: \"Elevated 5xx error rate on oenexa-identity\"

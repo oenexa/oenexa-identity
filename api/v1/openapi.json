@@ -1,0 +1,182 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OENEXA Identity & Sovereign IAM API",
+    "version": "1.0.0",
+    "description": "RFC 8414 OAuth 2.1 & OpenID Connect Sovereign Identity Provider at id.oenexa.com"
+  },
+  "servers": [
+    {
+      "url": "https://id.oenexa.com",
+      "description": "Production Identity Provider"
+    }
+  ],
+  "paths": {
+    "/.well-known/openid-configuration": {
+      "get": {
+        "summary": "OpenID Connect Discovery Document",
+        "operationId": "getOidcConfiguration",
+        "responses": {
+          "200": {
+            "description": "OIDC Provider Metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OidcConfiguration"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/.well-known/jwks.json": {
+      "get": {
+        "summary": "JSON Web Key Set",
+        "operationId": "getJwks",
+        "responses": {
+          "200": {
+            "description": "Public signing keys for verifying issued JWTs",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JwksResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/oauth2/token": {
+      "post": {
+        "summary": "Exchange Authorization Code or Credentials for OAuth 2.1 Tokens",
+        "operationId": "issueToken",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/x-www-form-urlencoded": {
+              "schema": {
+                "$ref": "#/components/schemas/TokenRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/passkey/verify": {
+      "post": {
+        "summary": "Verify FIDO2 / WebAuthn Passkey Assertion",
+        "operationId": "verifyPasskey",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PasskeyVerificationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Passkey verified",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TokenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "OidcConfiguration": {
+        "type": "object",
+        "properties": {
+          "issuer": { "type": "string" },
+          "authorization_endpoint": { "type": "string" },
+          "token_endpoint": { "type": "string" },
+          "jwks_uri": { "type": "string" },
+          "response_types_supported": { "type": "array", "items": { "type": "string" } },
+          "subject_types_supported": { "type": "array", "items": { "type": "string" } },
+          "id_token_signing_alg_values_supported": { "type": "array", "items": { "type": "string" } },
+          "code_challenge_methods_supported": { "type": "array", "items": { "type": "string" } }
+        },
+        "required": ["issuer", "authorization_endpoint", "token_endpoint", "jwks_uri"]
+      },
+      "JwksResponse": {
+        "type": "object",
+        "properties": {
+          "keys": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kty": { "type": "string" },
+                "kid": { "type": "string" },
+                "use": { "type": "string" },
+                "alg": { "type": "string" },
+                "n": { "type": "string" },
+                "e": { "type": "string" }
+              },
+              "required": ["kty", "kid", "alg"]
+            }
+          }
+        },
+        "required": ["keys"]
+      },
+      "TokenRequest": {
+        "type": "object",
+        "properties": {
+          "grant_type": { "type": "string", "enum": ["authorization_code", "refresh_token"] },
+          "client_id": { "type": "string" },
+          "code": { "type": "string" },
+          "redirect_uri": { "type": "string" },
+          "code_verifier": { "type": "string" },
+          "refresh_token": { "type": "string" }
+        },
+        "required": ["grant_type", "client_id"]
+      },
+      "TokenResponse": {
+        "type": "object",
+        "properties": {
+          "access_token": { "type": "string" },
+          "token_type": { "type": "string", "example": "Bearer" },
+          "expires_in": { "type": "integer", "example": 3600 },
+          "refresh_token": { "type": "string" },
+          "id_token": { "type": "string" },
+          "scope": { "type": "string" }
+        },
+        "required": ["access_token", "token_type", "expires_in"]
+      },
+      "PasskeyVerificationRequest": {
+        "type": "object",
+        "properties": {
+          "userId": { "type": "string" },
+          "credentialId": { "type": "string" },
+          "clientDataJSON": { "type": "string" },
+          "authenticatorData": { "type": "string" },
+          "signature": { "type": "string" }
+        },
+        "required": ["userId", "credentialId", "clientDataJSON", "authenticatorData", "signature"]
+      }
+    }
+  }
+}

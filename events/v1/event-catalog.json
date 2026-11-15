@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "domain": "com.oenexa.identity",
+  "version": "1.0.0",
+  "events": [
+    {
+      "type": "com.oenexa.identity.user.registered.v1",
+      "description": "Emitted when a new sovereign identity is created",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "source": { "type": "string", "example": "https://id.oenexa.com" },
+          "specversion": { "type": "string", "example": "1.0" },
+          "type": { "type": "string", "example": "com.oenexa.identity.user.registered.v1" },
+          "time": { "type": "string", "format": "date-time" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": { "type": "string" },
+              "email": { "type": "string" },
+              "username": { "type": "string" },
+              "tier": { "type": "string", "enum": ["UNVERIFIED", "TIER_1", "TIER_2", "INSTITUTIONAL"] }
+            },
+            "required": ["userId", "email"]
+          }
+        },
+        "required": ["id", "source", "type", "data"]
+      }
+    },
+    {
+      "type": "com.oenexa.identity.session.revoked.v1",
+      "description": "Emitted when an active token session is invalidated",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "type": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "userId": { "type": "string" },
+              "sessionId": { "type": "string" },
+              "reason": { "type": "string" }
+            },
+            "required": ["userId", "sessionId"]
+          }
+        }
+      }
+    }
+  ]
+}

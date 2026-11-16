@@ -4,7 +4,7 @@ import {
   EventTypes,
   type CloudEvent,
   type UserRegisteredPayload,
-} from '@oenexa/event-schemas';
+} from '../domain/events.js';
 import type { User, Session, AuthTokens, UserRole, KycTier } from '../domain/types.js';
 
 export class IdentityService {

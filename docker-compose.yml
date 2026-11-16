@@ -1,0 +1,24 @@
+# ==============================================================================
+# OENEXA Identity & Access Management Service — Standalone Stack
+# ==============================================================================
+
+version: "3.8"
+
+services:
+  oenexa-identity:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: oenexa-identity-standalone
+    ports:
+      - "8083:8083"
+    environment:
+      PORT: "8083"
+      NODE_ENV: production
+      JWT_SECRET: ${JWT_SECRET:-oenexa_identity_super_jwt_secret_change_in_prod}
+    healthcheck:
+      test: ["CMD-SHELL", "wget --spider -q http://localhost:8083/health || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+    restart: unless-stopped

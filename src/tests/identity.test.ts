@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { IdentityService } from '../service/IdentityService.js';
 import { OidcDiscoveryService } from '../service/OidcDiscoveryService.js';
-import { EventTypes } from '@oenexa/event-schemas';
+import { EventTypes } from '../domain/events.js';
 
 describe('OENEXA Identity Service & OpenID Connect', () => {
   it('registers user, hashes password securely, and records CloudEvent outbox', () => {

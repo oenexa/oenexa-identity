@@ -6,6 +6,8 @@ export * from './domain/types.js';
 export * from './domain/events.js';
 export * from './service/IdentityService.js';
 export * from './service/OidcDiscoveryService.js';
+export * from './service/PasskeyRelyingPartyService.js';
+export * from './service/RiskBasedAuthEngine.js';
 
 const identity = new IdentityService();
 const oidc = new OidcDiscoveryService();

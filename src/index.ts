@@ -1,6 +1,9 @@
 import http from 'node:http';
 import { IdentityService } from './service/IdentityService.js';
 import { OidcDiscoveryService } from './service/OidcDiscoveryService.js';
+import { DPoPTokenService } from './service/DPoPTokenService.js';
+import { ZeroTrustServiceGuard } from './service/ZeroTrustServiceGuard.js';
+import { SiemAuditLogger } from './service/SiemAuditLogger.js';
 
 export * from './domain/types.js';
 export * from './domain/events.js';
@@ -8,9 +11,15 @@ export * from './service/IdentityService.js';
 export * from './service/OidcDiscoveryService.js';
 export * from './service/PasskeyRelyingPartyService.js';
 export * from './service/RiskBasedAuthEngine.js';
+export * from './service/DPoPTokenService.js';
+export * from './service/ZeroTrustServiceGuard.js';
+export * from './service/SiemAuditLogger.js';
 
 const identity = new IdentityService();
 const oidc = new OidcDiscoveryService();
+const dpopTokenService = new DPoPTokenService();
+const zeroTrustGuard = new ZeroTrustServiceGuard();
+const siemLogger = new SiemAuditLogger();
 const PORT = Number(process.env.PORT) || 8083;
 
 export const server = http.createServer((req, res) => {

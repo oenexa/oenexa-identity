@@ -14,6 +14,7 @@ export * from './service/RiskBasedAuthEngine.js';
 export * from './service/DPoPTokenService.js';
 export * from './service/ZeroTrustServiceGuard.js';
 export * from './service/SiemAuditLogger.js';
+export * from './service/SessionSecurityService.js';
 
 const identity = new IdentityService();
 const oidc = new OidcDiscoveryService();

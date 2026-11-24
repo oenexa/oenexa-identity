@@ -15,6 +15,7 @@ export * from './service/DPoPTokenService.js';
 export * from './service/ZeroTrustServiceGuard.js';
 export * from './service/SiemAuditLogger.js';
 export * from './service/SessionSecurityService.js';
+export * from './registry/CountryRegistry.js';
 
 const identity = new IdentityService();
 const oidc = new OidcDiscoveryService();
